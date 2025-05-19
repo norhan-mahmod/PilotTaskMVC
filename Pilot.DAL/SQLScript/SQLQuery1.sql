@@ -1,5 +1,5 @@
 -- Create Tables
-create table IssueType(
+create table IssueTypes(
 	Id int primary key identity(1,1),
 	Name nvarchar(20) not null
 );
@@ -9,16 +9,18 @@ create table CustomerTickets(
 	FullName nvarchar(max) not null,
 	MobileNumber nvarchar(20) not null,
 	Email nvarchar(max) not null,
-	IssueTypeId int references IssueType(Id),
+	IssueTypeId int references IssueTypes(Id),
 	Description nvarchar(max) not null,
 	Priority int not null,
 	Status nvarchar(10) default 'Open',
 	CreatedAt datetime default getdate()
 );
+GO
 
 -- Seeding Data in IssueType table
-insert into IssueType 
+insert into IssueTypes 
 values ('Technical' ),( 'Billing') ,( 'Complaint') ,( 'Other')
+GO
 
 -- Stored Procedures
 --ADD Ticket
@@ -34,6 +36,7 @@ begin
 	insert into CustomerTickets(FullName,MobileNumber,Email,IssueTypeId,Description,Priority)
 	values (@FullName,@MobileNumber,@Email,@IsuueTypeId,@Description,@Priority)
 end
+GO
 
 --Get Tickets with optional filter with IssueType , Priority
 create procedure SP_GetTickets 
@@ -41,13 +44,16 @@ create procedure SP_GetTickets
 				@Priority int = null
 with encryption as
 begin
-	if(@IssueTypeId is null and @Priority is null)
+	if(@IssueTypeId is not null and @Priority is not null)
+		select * from CustomerTickets where IssueTypeId = @IssueTypeId and Priority = @Priority
+	else if(@IssueTypeId is null and @Priority is null)
 		select * from CustomerTickets
 	else if(@IssueTypeId is not null)
 		select * from CustomerTickets where IssueTypeId = @IssueTypeId
 	else if(@Priority is not null)
 		select *from CustomerTickets where Priority = @Priority
 end
+GO
 
 --Get Ticket By Id
 create procedure SP_GetTicketById @Id int
@@ -55,6 +61,7 @@ with encryption as
 begin
 	select * from CustomerTickets where Id = @Id
 end
+GO
 
 --Update Ticket 
 create procedure SP_UpdateTicket 
@@ -76,10 +83,12 @@ begin
 		Priority = @Priority
 	where Id = @Id
 end
+GO
 
 -- Get Issue Types
 create procedure SP_GetIssueTypes
 with encryption as
 begin
-	select * from IssueType
+	select * from IssueTypes
 end
+GO

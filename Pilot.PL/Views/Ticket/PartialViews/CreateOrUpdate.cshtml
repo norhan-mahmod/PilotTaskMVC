@@ -1,0 +1,43 @@
+﻿@model CustomerTicket
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    var IssueTypes = new SelectList(TempData["IssueTypes"] as List<IssueType>, "Id", "Name");
+    var Priorities = new SelectList(TempData["Priorities"] as List<SelectListItem>, "Value", "Text");
+}
+
+<div class="mb-3">
+    <label asp-for="FullName" class="form-label"></label>
+    <input asp-for="FullName" type="text" class="form-control" placeholder="Enter Your Name">
+    <span asp-validation-for="FullName" class="text-danger"></span>
+</div>
+<div class="mb-3">
+    <label asp-for="MobileNumber" class="form-label"></label>
+    <input asp-for="MobileNumber" type="tel" class="form-control" placeholder="Enter Your Phone">
+    <span asp-validation-for="MobileNumber" class="text-danger"></span>
+</div>
+<div class="mb-3">
+    <label asp-for="Email" class="form-label"></label>
+    <input asp-for="Email" type="email" class="form-control" placeholder="name@example.com">
+    <span asp-validation-for="Email" class="text-danger"></span>
+</div>
+<div class="mb-3">
+    <label asp-for="Description" class="form-label"></label>
+    <textarea asp-for="Description" class="form-control" rows="3"></textarea>
+    <span asp-validation-for="Description" class="text-danger"></span>
+</div>
+<div class="form-group mb-3">
+    <label asp-for="IssueTypeId" class="form-label"></label>
+    <select asp-for="IssueTypeId" asp-items="IssueTypes" class="form-control">
+        <option>--Select Issue Type--</option>
+    </select>
+    <span asp-validation-for="IssueTypeId" class="text-danger"></span>
+</div>
+<div class="form-group mb-3">
+    <label asp-for="Priority" class="form-label"></label>
+    <select asp-for="Priority" asp-items="Priorities">
+        <option>--Select Priority--</option>
+    </select>
+    <span asp-validation-for="Priority" class="text-danger"></span>
+</div>

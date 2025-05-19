@@ -1,3 +1,9 @@
+using Microsoft.EntityFrameworkCore;
+using Pilot.BLL.IssueTypeRepo;
+using Pilot.BLL.TicketRepo;
+using Pilot.DAL.Context;
+using Pilot.PL.Helper;
+
 namespace Pilot.PL
 {
     public class Program
@@ -9,7 +15,22 @@ namespace Pilot.PL
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
+            builder.Services.AddDbContext<TicketDbContext>(options =>
+            {
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+            });
+
+            builder.Services.AddScoped<ITicketRepository, TicketRepository>();
+            builder.Services.AddScoped<IIssueTypeRepository , IssueTypeRepository>();
+
             var app = builder.Build();
+
+            //Initialize database using script file
+            DatabaseInitializer.EnsureDatabaseExists(builder.Configuration.GetConnectionString("master"));
+            var scop = app.Services.CreateScope();
+            var services = scop.ServiceProvider;
+            var context = services.GetRequiredService<TicketDbContext>();
+            DatabaseInitializer.Initialize(context);
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())

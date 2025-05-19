@@ -1,0 +1,74 @@
+﻿
+@model List<CustomerTicket>
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "Customer Tickets";
+    var IssueTypes = ViewBag.IssueTypes as List<IssueType>;
+    var selectIssueTypes = new SelectList(ViewBag.IssueTypes as List<IssueType>, "Id", "Name");
+    var Priorities = new SelectList(TempData["Priorities"] as List<SelectListItem>, "Value", "Text");
+}
+
+<div class="row justify-content-around">
+    <div class="col-12">
+        <form asp-controller="Ticket" asp-action="Index">
+            <div class="row">
+                <div class="col-3">
+                    <select asp-items="@selectIssueTypes" name="IssueTypeId">
+                        <option>-select Issue Type-</option>
+                    </select>
+                </div>
+                <div class="col-3">
+                    <select asp-items="Priorities" name="Priority">
+                        <option>-select Priority-</option>
+                    </select>
+                </div>
+                <div class="col-2">
+                    <button type="submit" class="btn btn-primary">Search</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<h1>Customer Tickets </h1>
+
+@if(Model.Count != 0)
+{
+    <table class="table table-success table-striped">
+        <thead>
+            <tr>
+                <td>Id</td>
+                <td>FullName</td>
+                <td>MobileNumber</td>
+                <td>Email</td>
+                <td>IssueType</td>
+                <td>Priority</td>
+                <td>#</td>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var ticket in Model)
+            {
+                var issueType = IssueTypes.Find(issue => issue.Id == ticket.IssueTypeId);
+                <tr>
+                    <td>@ticket.Id</td>
+                    <td><a asp-controller="Ticket" asp-action="GetTicketDetails" asp-route-Id="@ticket.Id">@ticket.FullName</a></td>
+                    <td>@ticket.MobileNumber</td>
+                    <td>@ticket.Email</td>
+                    <td>@ticket.IssueType.Name</td>
+                    <td>@ticket.Priority.ToString()</td>
+                    <td>
+                        <a asp-controller="Ticket" asp-action="Update" asp-route-Id="@ticket.Id" class="btn btn-primary">Update</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <h1>There Is No Tickets!</h1>
+}
+

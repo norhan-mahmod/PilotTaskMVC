@@ -1,0 +1,59 @@
+﻿@model CustomerTicket
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "Ticket Details";
+    var IssueTypes = ViewBag.IssueTypes as List<IssueType>;
+    var type = IssueTypes.Find(t => t.Id == Model.IssueTypeId);
+}
+<h1>Ticket Details </h1>
+<table>
+    <tbody>
+        <tr>
+            <td>Id</td>
+            <td> </td>
+            <td>@Model.Id</td>
+        </tr>
+        <tr>
+            <td>Full Name</td>
+            <td> </td>
+            <td>@Model.FullName</td>
+        </tr>
+        <tr>
+            <td>Description</td>
+            <td> </td>
+            <td>@Model.Description</td>
+        </tr>
+        <tr>
+            <td>Email</td>
+            <td> </td>
+            <td>@Model.Email</td>
+        </tr>
+        <tr>
+            <td>Issue Type</td>
+            <td> </td>
+            <td>@type.Name</td>
+        </tr>
+        <tr>
+            <td>MobileNumber</td>
+            <td> </td>
+            <td>@Model.MobileNumber</td>
+        </tr>
+        <tr>
+            <td>Priority</td>
+            <td> </td>
+            <td>@Model.Priority.ToString()</td>
+        </tr>
+        <tr>
+            <td>Status</td>
+            <td> </td>
+            <td>@Model.Status</td>
+        </tr>
+        <tr>
+            <td>CreatedAt</td>
+            <td> </td>
+            <td>@Model.CreatedAt</td>
+        </tr>
+    </tbody>
+</table>
