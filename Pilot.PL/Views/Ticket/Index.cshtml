@@ -5,17 +5,20 @@
 *@
 @{
     ViewData["Title"] = "Customer Tickets";
+    var selectedType = ViewContext.HttpContext.Request.Query["IssueTypeId"].ToString();
+    var selectedPriority = ViewContext.HttpContext.Request.Query["Priority"].ToString();
     var IssueTypes = ViewBag.IssueTypes as List<IssueType>;
-    var selectIssueTypes = new SelectList(ViewBag.IssueTypes as List<IssueType>, "Id", "Name");
-    var Priorities = new SelectList(TempData["Priorities"] as List<SelectListItem>, "Value", "Text");
+    var selectIssueTypes = new SelectList(ViewBag.IssueTypes as List<IssueType>, "Id", "Name", selectedType);
+    var Priorities = new SelectList(ViewBag.Priorities as List<SelectListItem>, "Value", "Text" , selectedPriority);
+    
 }
 
-<div class="row justify-content-around">
+<div class="row">
     <div class="col-12">
-        <form asp-controller="Ticket" asp-action="Index">
+        <form asp-controller="Ticket" asp-action="Index" method="get">
             <div class="row">
                 <div class="col-3">
-                    <select asp-items="@selectIssueTypes" name="IssueTypeId">
+                    <select asp-items="selectIssueTypes" name="IssueTypeId">
                         <option>-select Issue Type-</option>
                     </select>
                 </div>

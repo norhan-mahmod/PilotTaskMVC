@@ -21,7 +21,7 @@ namespace Pilot.PL.Controllers
         {
             var issueTypes = await issueTypeRepository.GetAllIssue();
             ViewBag.IssueTypes = issueTypes;
-            TempData["Priorities"] = Enum.GetValues(typeof(TicketPriority))
+            ViewBag.Priorities = Enum.GetValues(typeof(TicketPriority))
                                 .Cast<TicketPriority>()
                                 .Select(p => new SelectListItem()
                                 { Text = p.ToString(), Value = ((int)p).ToString() })

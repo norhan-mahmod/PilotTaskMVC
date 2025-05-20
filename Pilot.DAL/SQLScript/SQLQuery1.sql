@@ -44,14 +44,9 @@ create procedure SP_GetTickets
 				@Priority int = null
 with encryption as
 begin
-	if(@IssueTypeId is not null and @Priority is not null)
-		select * from CustomerTickets where IssueTypeId = @IssueTypeId and Priority = @Priority
-	else if(@IssueTypeId is null and @Priority is null)
-		select * from CustomerTickets
-	else if(@IssueTypeId is not null)
-		select * from CustomerTickets where IssueTypeId = @IssueTypeId
-	else if(@Priority is not null)
-		select *from CustomerTickets where Priority = @Priority
+		select * from CustomerTickets 
+		where ( @IssueTypeId is null or IssueTypeId = @IssueTypeId) 
+		and ( @Priority is null or Priority = @Priority)
 end
 GO
 

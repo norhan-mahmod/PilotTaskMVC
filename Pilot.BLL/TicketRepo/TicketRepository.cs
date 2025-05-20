@@ -47,19 +47,14 @@ namespace Pilot.BLL.TicketRepo
         {
             try
             {
-                List<CustomerTicket> tickets;
-                var IssueIdParam = new SqlParameter("@IssueTypeId", IssueTypeId);
-                var PriorityParam = new SqlParameter("@Priority", Priority);
+                var IssueIdParam = new SqlParameter("@IssueTypeId", IssueTypeId ?? (object)DBNull.Value);
+                var PriorityParam = new SqlParameter("@Priority", Priority ?? (object)DBNull.Value);
 
-                if (IssueTypeId is not null && Priority is not null)
-                    tickets = await context.CustomerTickets.FromSqlRaw("exec SP_GetTickets @IssueTypeId , @Priority " , IssueIdParam, PriorityParam).ToListAsync();
-                else if (IssueTypeId is null && Priority is null)
-                    tickets = await context.CustomerTickets.FromSqlRaw("exec SP_GetTickets").ToListAsync();
-                else if(IssueTypeId.HasValue)
-                    tickets = await context.CustomerTickets.FromSqlRaw("exec SP_GetTickets @IssueTypeId" , IssueIdParam).ToListAsync();
-                else
-                    tickets = await context.CustomerTickets.FromSqlRaw("exec SP_GetTickets @Priority", PriorityParam).ToListAsync();
+                var tickets = await context.CustomerTickets
+                    .FromSqlRaw("exec SP_GetTickets @IssueTypeId , @Priority " ,
+                    IssueIdParam, PriorityParam).ToListAsync();
                 return tickets;
+                
             }
             catch(Exception ex)
             {
